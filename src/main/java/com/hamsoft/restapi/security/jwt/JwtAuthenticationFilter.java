@@ -1,5 +1,6 @@
 package com.hamsoft.restapi.security.jwt;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -16,11 +17,11 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends GenericFilterBean{
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
+
+    @Autowired
     private  JwtTokenProvider jwtTokenProvider;
 
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
+
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
