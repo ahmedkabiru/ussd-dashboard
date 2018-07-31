@@ -90,11 +90,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.js")
                 .permitAll()
                 .antMatchers("/api/authenticate").permitAll()
+                .antMatchers("/api/register").permitAll()
                 .anyRequest()
                 .authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-
+        // disable page caching
+        http.headers().cacheControl();
     }
 }

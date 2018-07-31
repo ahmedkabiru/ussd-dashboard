@@ -1,4 +1,4 @@
-package com.hamsoft.restapi.payload;
+package com.hamsoft.restapi.payload.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

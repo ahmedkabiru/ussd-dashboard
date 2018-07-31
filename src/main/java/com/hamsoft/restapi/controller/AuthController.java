@@ -1,7 +1,7 @@
 package com.hamsoft.restapi.controller;
 
 import com.hamsoft.restapi.payload.JWTToken;
-import com.hamsoft.restapi.payload.LoginRequest;
+import com.hamsoft.restapi.payload.request.LoginRequest;
 import com.hamsoft.restapi.security.jwt.JwtAuthenticationFilter;
 import com.hamsoft.restapi.security.jwt.JwtTokenProvider;
 import io.micrometer.core.annotation.Timed;
@@ -49,6 +49,7 @@ public class AuthController {
         httpHeaders.add(JwtAuthenticationFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
     }
+
 
 
 
