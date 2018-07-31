@@ -9,6 +9,7 @@ import com.hamsoft.restapi.repository.UserRepository;
 import com.hamsoft.restapi.security.AuthoritiesConstants;
 import com.hamsoft.restapi.security.SecurityUtils;
 import com.hamsoft.restapi.service.UserService;
+import com.hamsoft.restapi.util.RandomUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -26,17 +28,18 @@ public class UserServiceImpl implements UserService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
 
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     private RoleRepository roleRepository;
-    @Autowired
+
     private PasswordEncoder passwordEncoder;
 
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository,RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository,RoleRepository roleRepository,PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -79,4 +82,27 @@ public class UserServiceImpl implements UserService {
     public Boolean checkIfValidOldPassword(User user, String password) {
             return  passwordEncoder.matches(password,user.getPassword());
     }
+
+    @Override
+    public Optional<User> requestPasswordReset(String email) {
+        return  userRepository.findByEmail(email).map(user -> {
+            user.setResetKey(RandomUtil.generateResetKey());
+            user.setResetDate(Instant.now());
+            return  user;
+        });
+    }
+
+    public Optional<User> completePasswordReset(String newPassword, String key) {
+        log.debug("Reset user password for reset key {}", key);
+
+        return userRepository.findByResetKey(key)
+                .filter(user -> user.getResetDate().isAfter(Instant.now().minusSeconds(86400)))
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    user.setResetKey(null);
+                    user.setResetDate(null);
+                    return user;
+                });
+    }
+
 }

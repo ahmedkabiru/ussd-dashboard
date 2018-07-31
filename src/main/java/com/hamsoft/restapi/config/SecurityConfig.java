@@ -91,6 +91,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/register").permitAll()
+                .antMatchers("/api/reset-password").permitAll()
+                .antMatchers("/api/reset-password/finish").permitAll()
                 .anyRequest()
                 .authenticated();
 
