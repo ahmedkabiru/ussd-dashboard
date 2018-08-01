@@ -30,7 +30,6 @@ import javax.annotation.PostConstruct;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
-
     @Autowired
     private  AuthenticationManagerBuilder authenticationManagerBuilder;
 
