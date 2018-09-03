@@ -4,9 +4,13 @@ import com.hamsoft.restapi.domain.User;
 import com.hamsoft.restapi.payload.request.UserChangePasswordModel;
 import com.hamsoft.restapi.payload.request.UserRequest;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
+
+
+     List<User> getAllUsers();
 
      Optional<User> findOneByUserName(String username);
 

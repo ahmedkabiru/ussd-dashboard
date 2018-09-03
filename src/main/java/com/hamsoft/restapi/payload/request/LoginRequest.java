@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 public class LoginRequest {
 
 
+
     @NotNull
     private String username;
 
