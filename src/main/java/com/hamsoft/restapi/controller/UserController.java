@@ -3,27 +3,17 @@ package com.hamsoft.restapi.controller;
 
 import com.hamsoft.restapi.domain.User;
 
-import com.hamsoft.restapi.exception.AppException;
-import com.hamsoft.restapi.exception.BadRequestException;
-import com.hamsoft.restapi.payload.request.ResetPasswordModel;
-import com.hamsoft.restapi.payload.request.UserChangePasswordModel;
-import com.hamsoft.restapi.payload.request.UserRequest;
-import com.hamsoft.restapi.payload.response.ApiResponse;
-import com.hamsoft.restapi.repository.UserRepository;
-import com.hamsoft.restapi.security.SecurityUtils;
+import com.hamsoft.restapi.exception.ResourceNotFoundException;
 import com.hamsoft.restapi.service.MailService;
 import com.hamsoft.restapi.service.UserService;
-import io.micrometer.core.annotation.Timed;
+import com.hamsoft.restapi.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,17 +25,42 @@ public class UserController {
     private final  UserService userService;
     private final   MailService mailService;
 
-//    @Autowired
-//    public UserController(UserService userService,MailService mailService) {
-//        this.userService = userService;
-//        this.mailService = mailService;
-//    }
+    private  static  final Logger logger = LoggerFactory.getLogger(UserController.class);
+
 
     @GetMapping
     public List<User> getAllUsers(){
         return  userService.getAllUsers();
     }
 
+
+    // Get User By Id
+    @GetMapping(value = "{id}")
+    public User getUser(@PathVariable(value = "id") Long id) throws EntityNotFoundException
+    {
+      //return userService.findById(id).orElseThrow(()->new ResourceNotFoundException("User","id",id));
+
+      Optional<User> user =  userService.findById(id);
+      if(!user.isPresent()){
+          throw new EntityNotFoundException(User.class, "id", id.toString());
+        }
+        return user.get();
+    }
+
+
+    public User updateUser(@PathVariable(value = "id") Long id, @Valid @RequestBody User userDetails){
+//        User user = userService.findById(id).orElseThrow(()->new ResourceNotFoundException("User","id",id));
+//        return  userService.createUser(user);
+        return  null;
+    }
+
+
+    @DeleteMapping(value = "{id}")
+    public ResponseEntity deleteUser(@PathVariable(value = "id") Long id){
+        User user= userService.findById(id).orElseThrow(()->new ResourceNotFoundException("User","id",id));
+        userService.deleteUser(user);
+        return  ResponseEntity.ok().build();
+    }
 
 
 }

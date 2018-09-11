@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Component
@@ -33,7 +33,10 @@ public class JwtTokenProvider {
     @Value("${app.jwt.token-validity-in-seconds-for-remember-me}")
     private long tokenValidityInMillisecondsForRememberMe;
 
-
+    @PostConstruct
+    protected void init() {
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    }
 
     public String createToken(Authentication authentication , boolean rememberMe){
         String authorities = authentication.getAuthorities().stream()
@@ -50,9 +53,10 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(ROLES_KEY,authorities)
-                .signWith(SignatureAlgorithm.HS512,secretKey)
+                .signWith(SignatureAlgorithm.HS512, secretKey)
                 .setExpiration(validity)
                 .compact();
+
     }
 
     public Authentication getAuthentication(String token) {

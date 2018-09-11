@@ -38,6 +38,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 public class RestApiApplicationTests extends  AbstractMvcTest {
 
+	final static String USERNAME = "opeyemi.kabiru@yahoo.com";
+	final static String PASSWORD = "password";
+
 //	@Test
 //	public void contextLoads() {
 //	}
@@ -98,7 +101,7 @@ public class RestApiApplicationTests extends  AbstractMvcTest {
 	public void userRepositoryWithTokenIsAllowed() throws Exception {
 		final String token = extractToken(login("opeyemi.kabiru@yahoo.com", "password").andReturn());
 		mockMvc.perform(get("/api/users").header("Authorization", "Bearer " + token))
-				.andExpect(status().isOk()).andReturn();
+				.andExpect(status().isOk()).andDo(print()).andReturn();
 	}
 
     @Test

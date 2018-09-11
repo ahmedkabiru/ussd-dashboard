@@ -69,7 +69,7 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest userRequest){
+    public ResponseEntity createUser(@Valid @RequestBody UserRequest userRequest){
 
         if(userService.findOneByUserName(userRequest.getUsername()).isPresent()){
             return new ResponseEntity<>(new ApiResponse(false,"Username is already Taken"), HttpStatus.BAD_REQUEST);
@@ -82,8 +82,8 @@ public class AuthController {
         User newUser = userService.createUser(userRequest);
 
         URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/users/{username}")
-                .buildAndExpand(newUser.getUsername()).toUri();
+                .fromCurrentContextPath().path("/users/{id}")
+                .buildAndExpand(newUser.getId()).toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
 
