@@ -6,6 +6,7 @@ import com.hamsoft.restapi.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,7 +20,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Iterable<Company> listAllCompanies() {
+    public List<Company> listAllCompanies() {
         return companyRepository.findAll();
     }
 

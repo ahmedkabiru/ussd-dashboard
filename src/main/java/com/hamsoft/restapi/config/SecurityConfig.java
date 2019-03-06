@@ -3,6 +3,7 @@ package com.hamsoft.restapi.config;
 import com.hamsoft.restapi.security.CustomUserDetailsService;
 import com.hamsoft.restapi.security.jwt.JwtAuthenticationEntryPoint;
 import com.hamsoft.restapi.security.jwt.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,20 +32,16 @@ import javax.annotation.PostConstruct;
         prePostEnabled = true
 )
 @Import(SecurityProblemSupport.class)
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    @Autowired
-    private  AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final SecurityProblemSupport problemSupport;
 
-    @Autowired
-    private SecurityProblemSupport problemSupport;
+    private final  CustomUserDetailsService userDetailsService;
 
-    @Autowired
-    CustomUserDetailsService userDetailsService;
-
-    @Autowired
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final JwtAuthenticationEntryPoint unauthorizedHandler;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
@@ -74,6 +72,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
+    }
+
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors()
@@ -83,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                      .authenticationEntryPoint(unauthorizedHandler).and()
                 .authorizeRequests()
-                .antMatchers("/",
+                .antMatchers(
                         "/favicon.ico",
                         "/**/*.png",
                         "/**/*.gif",
@@ -93,11 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js")
                 .permitAll()
-                .antMatchers("/api/authenticate").permitAll()
-                .antMatchers("/api/companies").permitAll()
-                .antMatchers("/api/register").permitAll()
-                .antMatchers("/api/reset-password").permitAll()
-                .antMatchers("/api/reset-password/finish").permitAll()
+                .antMatchers("/api/auth").permitAll()
                 .anyRequest()
                 .authenticated();
 

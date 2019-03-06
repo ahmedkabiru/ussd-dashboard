@@ -3,11 +3,12 @@ package com.hamsoft.restapi.service;
 import com.hamsoft.restapi.domain.Product;
 import com.hamsoft.restapi.domain.Product;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
 
-    Iterable<Product> listAllProduct();
+    List<Product> listAllProduct();
 
     Optional<Product> getProductById(Long id);
 

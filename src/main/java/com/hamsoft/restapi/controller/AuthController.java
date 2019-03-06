@@ -15,6 +15,7 @@ import com.hamsoft.restapi.security.jwt.JwtTokenProvider;
 import com.hamsoft.restapi.service.MailService;
 import com.hamsoft.restapi.service.UserService;
 import io.micrometer.core.annotation.Timed;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -34,24 +35,19 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
 
+@Api(tags = "User Authentication")
 @RestController
-@RequestMapping("/api")
+@RequestMapping(APIName.AUTH_API)
 @RequiredArgsConstructor
 public class AuthController {
 
     private final UserService userService;
     private final MailService mailService;
     private final JwtTokenProvider tokenProvider;
-
     private final AuthenticationManager authenticationManager;
 
-//    @Autowired
-//    public AuthController(JwtTokenProvider tokenProvider, AuthenticationManager authenticationManager) {
-//        this.tokenProvider = tokenProvider;
-//        this.authenticationManager = authenticationManager;
-//    }
 
-    @PostMapping("/authenticate")
+    @PostMapping(path = APIName.USERS_LOGIN)
     @Timed
     public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -68,7 +64,7 @@ public class AuthController {
     }
 
 
-    @PostMapping("/register")
+    @PostMapping(path = APIName.CREATE_USER)
     public ResponseEntity createUser(@Valid @RequestBody UserRequest userRequest){
 
         if(userService.findOneByUserName(userRequest.getUsername()).isPresent()){
@@ -91,9 +87,9 @@ public class AuthController {
 
 
 
-    @PostMapping(path = "/change-password")
+    @PostMapping(path = APIName.CHANGE_PASSWORD)
     @Timed
-    public  ResponseEntity<?> changePassword(@Valid @RequestBody UserChangePasswordModel userChangePasswordModel){
+    public  ResponseEntity<Object> changePassword(@Valid @RequestBody UserChangePasswordModel userChangePasswordModel){
         Optional<User> user = SecurityUtils.getCurrentUserLogin().flatMap(userService::findOneByUserName);
         if(user.isPresent()) {
             if (!userService.checkIfValidOldPassword(user.get(), userChangePasswordModel.getOldPassword())) {
@@ -107,7 +103,7 @@ public class AuthController {
     }
 
 
-    @PostMapping("/reset-password")
+    @PostMapping(path =  APIName.RESET_PASSWORD)
     public  void requestPasswordReset(@RequestBody String mail){
 
         mailService.sendPasswordResetMail(
@@ -116,7 +112,7 @@ public class AuthController {
         );
     }
 
-    @PostMapping(path = "/reset-password/finish")
+    @PostMapping(path = APIName.RESET_PASSWORD_FINISH)
     @Timed
     public void finishPasswordReset(@RequestBody ResetPasswordModel resetPasswordModel) {
 
