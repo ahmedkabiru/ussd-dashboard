@@ -1,0 +1,28 @@
+{
+  "properties": [
+    {
+      "name": "app.jwt.secret",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "app.jwt.token-validity-in-seconds",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "app.jwt.token-validity-in-seconds-for-remember-me",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "app.endpoint.base-url",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "app.mail.base-url",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "app.mail.from",
+      "type": "java.lang.String"
+    }
+  ]
+}
