@@ -25,12 +25,13 @@ public class SwaggerConfig {
     @Bean
     public Docket apiV1() {
         return new Docket(DocumentationType.SWAGGER_2)
-              //  .groupName("ussd-api-v1")
+                .groupName("ussd-api-v1")
                 .select()
                 .apis(RequestHandlerSelectors
-                        .basePackage("com.hamsoft.restapi.controller"))
+                        .basePackage("com.hamsoft.restapi"))
                 .paths(regex("/api/v1.*"))
-                .build().apiInfo(apiEndPointsInfo());
+                .build()
+                .apiInfo(apiEndPointsInfo());
     }
     private ApiInfo apiEndPointsInfo() {
         return new ApiInfoBuilder().title("USSD LIBRARY")
