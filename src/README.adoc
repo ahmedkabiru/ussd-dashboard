@@ -1,0 +1,19 @@
+== USSD MANAGEMENT DASHBOARD
+
+[[tools]]
+=== Technology used :
+        - Spring Boot 2.1.3
+		- Postgres
+		- JPA
+		- Swagger
+		- Web
+
+
+[[swagger-ui]]
+=== Swagger UI
+image::./images/swagger-ui.png[]
+
+
+[[datbase-mapping]]
+=== Database Mapping
+image::./images/Er-diagram.png[]
