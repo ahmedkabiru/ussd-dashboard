@@ -1,4 +1,4 @@
-== USSD MANAGEMENT DASHBOARD
+== USSD DIARY BACKEND
 
 [[tools]]
 === Technology used :

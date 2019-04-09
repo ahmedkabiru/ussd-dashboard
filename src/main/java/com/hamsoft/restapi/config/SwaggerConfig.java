@@ -34,7 +34,7 @@ public class SwaggerConfig {
                 .apiInfo(apiEndPointsInfo());
     }
     private ApiInfo apiEndPointsInfo() {
-        return new ApiInfoBuilder().title("USSD LIBRARY")
+        return new ApiInfoBuilder().title("USSD DIARY")
                 .description("Unstructured Supplementary Service Data(USSD) Repository board")
                 .contact(new Contact("Kabiru Ahmed", "Linkedln.com/kabiruahmed", "opeyemi.kabiru@yahoo.com"))
                 .license("Apache 2.0")
